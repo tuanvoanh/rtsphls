@@ -3,9 +3,9 @@
     "http_port": ":8083"
   },
   "streams": {
-    "H264_AAC": {
+    "camera-01": {
       "on_demand": false,
-      "url": "rtsp://171.25.232.20/d7b92541b4914c8e98104cba907864f8"
+      "url": "rtsp://username:password@camera-address/stream"
     }
   }
 }

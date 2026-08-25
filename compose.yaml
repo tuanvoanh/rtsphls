@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
     expose:
       - "8083"
     volumes:

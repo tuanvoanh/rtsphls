@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"time"
 
@@ -14,6 +15,20 @@ import (
 
 func serveHTTP() {
 	router := gin.Default()
+	allowOrigin := os.Getenv("CORS_ALLOW_ORIGIN")
+	if allowOrigin == "" {
+		allowOrigin = "*"
+	}
+	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", allowOrigin)
+		c.Header("Access-Control-Allow-Methods", "GET, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Range")
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+		c.Next()
+	})
 	gin.SetMode(gin.DebugMode)
 	router.LoadHTMLGlob("web/templates/*")
 	router.GET("/", func(c *gin.Context) {
@@ -70,7 +85,7 @@ func PlayHLS(c *gin.Context) {
 	}
 }
 
-//PlayHLSTS send client ts segment
+// PlayHLSTS send client ts segment
 func PlayHLSTS(c *gin.Context) {
 	suuid := c.Param("suuid")
 	if !Config.ext(suuid) {
